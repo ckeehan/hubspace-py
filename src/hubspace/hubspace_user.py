@@ -93,7 +93,7 @@ class HubspaceUser:
 
         now = datetime.datetime.now().timestamp()
 
-        if self._access_token == None or self._access_token_exp - self._expiration_buffer >= now:
+        if self._access_token == None or self._access_token_exp <= now:
             with requests.post(
                 "https://accounts.hubspaceconnect.com/auth/realms/thd/protocol/openid-connect/token",
                 data={        

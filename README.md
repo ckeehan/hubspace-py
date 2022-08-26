@@ -19,7 +19,7 @@ hubspace = Hubspace(username, password)
 
 ```py
 # get json info for all devices
-hubspace.getDeviceInfo()
+hubspace.getDevicesInfo()
 # get array of all device objects
 devices = hubspace.getDevices()
 # get target device object
