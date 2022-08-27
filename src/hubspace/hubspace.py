@@ -42,8 +42,8 @@ class Hubspace:
             "attributes": device["attributes"]
         } for device in self.getDevicesInfo(["attributes"]) ]
 
-    def getMetadata(self):
-        return self.get("accounts/" + self._user.getAccountID() + "/metadevices", host="semantics2.afero.net")
+    def getMetadata(self, expansions=[]):
+        return self.get("accounts/" + self._user.getAccountID() + "/metadevices" + getExpansions(expansions), host="semantics2.afero.net")
 
     def getConclaveAccess(self):
         return self.post("accounts/" + self._user.getAccountID() + "/conclaveAccess", data="{}", host="api2.afero.net")

@@ -6,6 +6,7 @@ class HubspaceDevice:
 
     _defaultName = None
     _manufacturerName = None
+    _metaID = None
     _model = None
     _deviceClass = None
 
@@ -16,14 +17,27 @@ class HubspaceDevice:
     def getID(self):
         return self._deviceID
 
+    def getMetaID(self):
+        if self._metaID == None:
+            self.getMetadata()
+        return self._metaID
+
     def getHubspace(self):
         return self._hubspace
 
     def getInfo(self, expansions=[]):
         return self._hubspace.get("accounts/" + self._hubspace.getAccountID() + "/devices/" + self._deviceID + getExpansions(expansions))
     
+    def getMetaInfo(self, state=""):
+        if state is True:
+            state = "/state"
+        return self._hubspace.get("accounts/" + self._hubspace.getAccountID() + "/metadevices/" + self.getMetaID() + state, host="semantics2.afero.net")
+    
     def getState(self):
         return self.getInfo(["state"])["deviceState"]
+    
+    def getRealState(self):
+        return self.getMetaInfo(state=True)
 
     def getTags(self):
         return self.getInfo(["tags"])["deviceTags"]
@@ -41,11 +55,13 @@ class HubspaceDevice:
             }),
         )
 
-    def getMetadata(self):
-        metadata = self._hubspace.getMetadata()
+    def getMetadata(self, *args, **kwargs):
+        metadata = self._hubspace.getMetadata(*args, **kwargs)
         for device in metadata:
             deviceID = device.get("deviceId")
             if deviceID == self._deviceID:
+                self._metaID = device["id"]
+
                 info = device["description"]["device"]
 
                 self._defaultName = info["defaultName"]
